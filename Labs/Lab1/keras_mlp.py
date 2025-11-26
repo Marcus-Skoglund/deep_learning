@@ -55,16 +55,6 @@ class KerasMLP:
                            optimizer=optimizer,
                            metrics=['accuracy'])  # Monitor the accuracy
 
-    # keras ExponentialDecay
-    def expo(
-    keras.optimizers.schedules.ExponentialDecay(
-    initial_learning_rate,
-    decay_steps,
-    decay_rate,
-    staircase=False,
-    name="ExponentialDecay",
-    ))
-
     # Optimization of model
     def train(
         self,

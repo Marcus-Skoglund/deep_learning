@@ -54,7 +54,7 @@ class MLP:
         x      # Input data points
     ):
         # TODO: specify a matrix for storing output values
-        y = np.zeros((x.shape[0], self.dataset.K))
+        y = np.zeros((x.shape[0], self.dataset.K)) # (number of input samples, number of output classes)
         # TODO: implement the feed-forward layer operations
 
         # 1. Specify a loop over all the datapoints

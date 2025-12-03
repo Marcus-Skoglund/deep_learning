@@ -64,6 +64,12 @@ class DataGenerator:
         self.y_train_oh = keras.utils.to_categorical(self.y_train, self.K)
         self.y_valid_oh = keras.utils.to_categorical(self.y_valid, self.K)
         self.y_test_oh = keras.utils.to_categorical(self.y_test, self.K)
+        '''
+        print ("test")
+        print(self.y_train_oh)
+        print(self.y_valid_oh)
+        print(self.y_test_oh)
+        '''
 
         if self.verbose:
             print('Data specification:')

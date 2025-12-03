@@ -45,10 +45,10 @@ def conv2d_layer(h,     # activations from previous layer, shape = [height, widt
             kernel = np.flipud(np.fliplr(kernel))
     # 5. Run convolution (you can, e.g., look at the convolve2d
     #    function in the scipy.signal library)
-            convolution = signal.convolve2d( h[:,:,j],kernel,mode='same')
+            conv = signal.convolve2d( h[:,:,j],kernel,mode='same')
     # 6. Sum convolutions over input channels, as described in the 
     #    equation for the convolutional layer
-            z += convolution
+            z += conv
     # 7. Finally, add the bias and apply activation function
         h_j[:,:,i] = activation(z + b[i], act)
     return h_j
@@ -60,13 +60,13 @@ def pool2d_layer(h):  # activations from conv layer, shape = [height, width, cha
     sy, sx = h.shape[0] // 2, h.shape[1] // 2 # deivdes the height and width to an even number, 5/2 = 2
 
     # 2. Specify array to store output
-    ho = np.zeros((sy,sx, h.shape[2]))
+    ho = np.zeros((sy, sx, h.shape[2]))
 
     # 3. Perform pooling for each channel.
     #    You can, e.g., look at the measure.block_reduce() function
     #    in the skimage library
     for i in range(h.shape[2]):
-        ho[:,:,i] = skimage.measure.block_reduce(h[:,:,i],func=np.max) # block size default 2x2
+        ho[:,:,i] = skimage.measure.block_reduce(h[:,:,i], (2,2), np.max) # block size default 2x2
     return ho
 
 # Flattening layer
@@ -90,7 +90,7 @@ def dense_layer(h,   # Activations from previous layer
     z = W @ h + b  # z = weightsen (w) in i layer h-1 + bias (matrismultiplikation så alla element multipliceras samtidigt)
     y  = activation(z, act) 
     
-    return y # y[:,0]??
+    return y[:,0]
     
 #---------------------------------
 # Our own implementation of a CNN
@@ -154,9 +154,9 @@ class CNN:
                 print('sample %d of %d'%(k,x.shape[0]))
 
             # Apply layers to image
-            y = self.feedforward_sample(x[k])   
+            y[k,:] = self.feedforward_sample(x[k])   
             
-        return y[:,0]
+        return y
 
     # Measure performance of model
     def evaluate(self):
@@ -166,6 +166,7 @@ class CNN:
         # Assume the cross-entropy loss.
         # For the accuracy, you can use the implementation from Lab 1.
         y_train_pre = self.feedforward(self.dataset.x_train)
+
         train_loss = -1 * np.mean(self.dataset.y_train_oh * np.log(y_train_pre))
         train_acc = np.mean(np.argmax(y_train_pre, axis=1) == self.dataset.y_train)
         print("\tTrain loss:     %0.4f"%train_loss)
